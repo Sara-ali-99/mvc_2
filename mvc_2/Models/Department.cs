@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace mvc_2.Models
 {
@@ -7,9 +8,18 @@ namespace mvc_2.Models
         [Key]
         public int Number { get; set; }
         public string? Name { get; set; }
+        [ForeignKey("EmpManage")]
+        public int? emp_m { get; set; }
+        public virtual List<employee>? EmpWork { get; set; }
+        public virtual employee? EmpManage { get; set; }
 
         public List<location>? DepartmentLocations { get; set; }
         public List<project>? Projects { get; set; }
-     
+
+      
+
+      
+       
+
     }
 }

@@ -27,7 +27,13 @@ namespace mvc_2.Models
 
         public List<employee>? Employees { get; set; }
 
+        [ForeignKey("deptWork")]
+        public int? deptId_w { get; set; }
+       
+       
 
+        public virtual Department? deptWork { get; set; }
+        public virtual Department? deptManage { get; set; }
 
     }
 }

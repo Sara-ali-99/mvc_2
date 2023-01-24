@@ -17,7 +17,8 @@ namespace mvc2.Migrations
                 {
                     Number = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    empm = table.Column<int>(name: "emp_m", type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,11 +38,17 @@ namespace mvc2.Migrations
                     Sex = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true),
                     Salary = table.Column<decimal>(type: "money", nullable: true),
-                    SuperVisorSSN = table.Column<int>(type: "int", nullable: true)
+                    SuperVisorSSN = table.Column<int>(type: "int", nullable: true),
+                    deptIdw = table.Column<int>(name: "deptId_w", type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_employees", x => x.SSN);
+                    table.ForeignKey(
+                        name: "FK_employees_departments_deptId_w",
+                        column: x => x.deptIdw,
+                        principalTable: "departments",
+                        principalColumn: "Number");
                     table.ForeignKey(
                         name: "FK_employees_employees_SuperVisorSSN",
                         column: x => x.SuperVisorSSN,
@@ -98,7 +105,7 @@ namespace mvc2.Migrations
                     Sex = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BirthDate = table.Column<DateTime>(type: "date", nullable: true),
                     Relationship = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ESSN = table.Column<int>(type: "int", nullable: false)
+                    ESSN = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,8 +114,7 @@ namespace mvc2.Migrations
                         name: "FK_dependents_employees_ESSN",
                         column: x => x.ESSN,
                         principalTable: "employees",
-                        principalColumn: "SSN",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "SSN");
                 });
 
             migrationBuilder.CreateTable(
@@ -137,9 +143,21 @@ namespace mvc2.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_departments_emp_m",
+                table: "departments",
+                column: "emp_m",
+                unique: true,
+                filter: "[emp_m] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_dependents_ESSN",
                 table: "dependents",
                 column: "ESSN");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_employees_deptId_w",
+                table: "employees",
+                column: "deptId_w");
 
             migrationBuilder.CreateIndex(
                 name: "IX_employees_SuperVisorSSN",
@@ -155,11 +173,22 @@ namespace mvc2.Migrations
                 name: "IX_workOns_ProjectNumber",
                 table: "workOns",
                 column: "ProjectNumber");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_departments_employees_emp_m",
+                table: "departments",
+                column: "emp_m",
+                principalTable: "employees",
+                principalColumn: "SSN");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_departments_employees_emp_m",
+                table: "departments");
+
             migrationBuilder.DropTable(
                 name: "dependents");
 
@@ -170,10 +199,10 @@ namespace mvc2.Migrations
                 name: "workOns");
 
             migrationBuilder.DropTable(
-                name: "employees");
+                name: "projects");
 
             migrationBuilder.DropTable(
-                name: "projects");
+                name: "employees");
 
             migrationBuilder.DropTable(
                 name: "departments");

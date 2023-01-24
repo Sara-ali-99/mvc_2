@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mvc_2.Models;
 
@@ -11,9 +12,11 @@ using mvc_2.Models;
 namespace mvc2.Migrations
 {
     [DbContext(typeof(MVC_DemoDbContext))]
-    partial class MVCDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230122224608_v1")]
+    partial class v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +36,14 @@ namespace mvc2.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("emp_m")
+                        .HasColumnType("int");
+
                     b.HasKey("Number");
+
+                    b.HasIndex("emp_m")
+                        .IsUnique()
+                        .HasFilter("[emp_m] IS NOT NULL");
 
                     b.ToTable("departments");
                 });
@@ -49,7 +59,7 @@ namespace mvc2.Migrations
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("ESSN")
+                    b.Property<int?>("ESSN")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -100,9 +110,14 @@ namespace mvc2.Migrations
                     b.Property<int?>("SuperVisorSSN")
                         .HasColumnType("int");
 
+                    b.Property<int?>("deptId_w")
+                        .HasColumnType("int");
+
                     b.HasKey("SSN");
 
                     b.HasIndex("SuperVisorSSN");
+
+                    b.HasIndex("deptId_w");
 
                     b.ToTable("employees");
                 });
@@ -165,13 +180,20 @@ namespace mvc2.Migrations
                     b.ToTable("workOns");
                 });
 
+            modelBuilder.Entity("mvc_2.Models.Department", b =>
+                {
+                    b.HasOne("mvc_2.Models.employee", "EmpManage")
+                        .WithOne("deptManage")
+                        .HasForeignKey("mvc_2.Models.Department", "emp_m");
+
+                    b.Navigation("EmpManage");
+                });
+
             modelBuilder.Entity("mvc_2.Models.Dependent", b =>
                 {
                     b.HasOne("mvc_2.Models.employee", "Employee")
                         .WithMany("Dependents")
-                        .HasForeignKey("ESSN")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ESSN");
 
                     b.Navigation("Employee");
                 });
@@ -182,7 +204,13 @@ namespace mvc2.Migrations
                         .WithMany("Employees")
                         .HasForeignKey("SuperVisorSSN");
 
+                    b.HasOne("mvc_2.Models.Department", "deptWork")
+                        .WithMany("EmpWork")
+                        .HasForeignKey("deptId_w");
+
                     b.Navigation("SuperVisor");
+
+                    b.Navigation("deptWork");
                 });
 
             modelBuilder.Entity("mvc_2.Models.location", b =>
@@ -228,6 +256,8 @@ namespace mvc2.Migrations
                 {
                     b.Navigation("DepartmentLocations");
 
+                    b.Navigation("EmpWork");
+
                     b.Navigation("Projects");
                 });
 
@@ -238,6 +268,8 @@ namespace mvc2.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("WorksOnProjects");
+
+                    b.Navigation("deptManage");
                 });
 
             modelBuilder.Entity("mvc_2.Models.project", b =>

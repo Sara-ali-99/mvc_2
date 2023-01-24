@@ -19,7 +19,10 @@ namespace mvc_2.Models
         {
             modelBuilder.Entity<location>().HasKey("DeptNumber", "Location");
             modelBuilder.Entity<workOn>().HasKey("ESSN", "projectNum");
+           
             modelBuilder.Entity<employee>().HasOne(s => s.SuperVisor).WithMany(s => s.Employees);
+            modelBuilder.Entity<employee>().HasOne(s => s.deptWork).WithMany(e => e.EmpWork);
+            modelBuilder.Entity<employee>().HasOne(s => s.deptManage).WithOne(e => e.EmpManage);
         }
         public DbSet<Department> departments { get; set; }
         public DbSet<employee> employees { get; set; }

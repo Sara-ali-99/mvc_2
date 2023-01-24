@@ -15,7 +15,8 @@ namespace mvc_2.Models
         public string? Relationship { get; set; }
 
         [ForeignKey("Employee")]
-        public int ESSN { get; set; }
+        public int? ESSN { get; set; }
         public employee? Employee { get; set; }
+      
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using mvc_2.Models;
 
 namespace mvc_2.Controllers
@@ -74,5 +75,29 @@ namespace mvc_2.Controllers
             dbContext.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Login()
+        {
+            return View("Login");
+
+        }
+        public IActionResult Check(employee emp)
+        {
+            employee e = dbContext.employees.Where(e => e.SSN == emp.SSN && e.FirstName == emp.FirstName).Single();
+            if (e != null)
+            {
+                HttpContext.Session.SetInt32("SSN", e.SSN);
+            }
+          
+            return RedirectToAction("Profile");
+        }
+        public IActionResult Profile()
+        {
+            employee emp = dbContext.employees.Where(e => e.SSN == HttpContext.Session.GetInt32("SSN")).Single();
+            return View("Profile", emp);
+
+        }
+
+
     }
 }
