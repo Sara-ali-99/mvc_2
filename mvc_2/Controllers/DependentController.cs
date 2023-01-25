@@ -18,24 +18,26 @@ namespace mvc_2.Controllers
         }
 
         public IActionResult GetById(int id)
-            
-            //List<Dependent> dependents = db.Dependents.Where(e => e.ESSN == HttpContext.Session.GetInt32("SSN")).ToList();
-            //return View("GetAll", dependent);
-            {
-                Dependent? dependent = dbContext.dependents.SingleOrDefault(e => e.id == id);
-                if (dependent == null)
-                {
-                    return View("Error");
-                }
-                return View(dependent);
 
-
-
-            }
-
-        public IActionResult Add()
         {
-            List<Dependent> dependents = dbContext.dependents.ToList();
+           // List<Dependent> dependents = dbContext.dependents.Where(e => e.ESSN == HttpContext.Session.GetInt32("SSN")).ToList();
+              //  return View("GetById", dependents);
+            //{
+            Dependent? dependent = dbContext.dependents.SingleOrDefault(e => e.ESSN == HttpContext.Session.GetInt32("SSN"));
+            if (dependent == null)
+            {
+                return View("Error");
+            }
+            return View(dependent);
+
+
+
+        }
+
+            public IActionResult Add()
+        {
+             List<Dependent> dependents = dbContext.dependents.ToList();
+           
             return View(dependents);
         }
 

@@ -8,7 +8,7 @@
 
 <h1>Add employee</h1>
 
-<form action="/employee/AddemployeeDb">
+<form action="Add">
     <label>FirstName</label>
     <input id="FirstName" name="FirstName" type="text" />
 
@@ -29,6 +29,9 @@
             <option value="@employee.SSN">@employee.FirstName</option>
         }
     </select>
+
+    <label>ESSN</label>
+            <input id="ESSN" name="ESSN" type="text" value="@Context.Session.GetInt32("SSN")" />
 
     <input type="submit" value="Add" />
 </form>

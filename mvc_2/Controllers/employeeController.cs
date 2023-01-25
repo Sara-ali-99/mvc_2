@@ -88,7 +88,7 @@ namespace mvc_2.Controllers
             {
                 HttpContext.Session.SetInt32("SSN", e.SSN);
             }
-          
+
             return RedirectToAction("Profile");
         }
         public IActionResult Profile()
