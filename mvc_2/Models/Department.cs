@@ -6,7 +6,7 @@ namespace mvc_2.Models
     public class Department
     {
         [Key]
-        public int Number { get; set; }
+        public int? Number { get; set; }
         public string? Name { get; set; }
         [ForeignKey("EmpManage")]
         public int? emp_m { get; set; }

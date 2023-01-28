@@ -13,7 +13,7 @@ namespace mvc_2.Models
 
         [ForeignKey("Department")]
         public int DeptNum { get; set; }
-        public Department? Department { get; set; }
+        public Department? Departments { get; set; }
 
         public List<workOn>? WorksOnProjects { get; set; }
     }
