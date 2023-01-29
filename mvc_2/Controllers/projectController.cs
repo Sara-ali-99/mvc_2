@@ -37,10 +37,10 @@ namespace mvc_2.Controllers
         }
         public IActionResult updateProject(project proj)
         {
-            var oldproj = db.projects.SingleOrDefault(d => d.Number == proj.Number);
-            oldproj.Name = proj.Name;
-            oldproj.Location = proj.Location;
-            oldproj.DeptNum = proj.DeptNum;
+            var old = db.projects.SingleOrDefault(d => d.Number == proj.Number);
+            old.Name = proj.Name;
+            old.Location = proj.Location;
+            old.DeptNum = proj.DeptNum;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
