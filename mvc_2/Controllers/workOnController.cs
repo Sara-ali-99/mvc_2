@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using mvc_2.Models;
 
@@ -27,14 +28,14 @@ namespace mvc_2.Controllers
         public IActionResult AddEmployeesToProjectsToDB(List<int> Projects, List<int> Employees)
         {
 
-            foreach (var Project in Projects)
+            foreach (var project in Projects)
             {
                 foreach (var employee in Employees)
                 {
                     workOn worksOnProject = new workOn()
                     {
                         ESSN = employee,
-                        projectNum = Project
+                        projectNum = project
                     };
                     worksOnProject1 = db.workOns.Include(wop => wop.Project).SingleOrDefault(wop => wop.ESSN == worksOnProject.ESSN);
                     db.workOns.Add(worksOnProject);
@@ -48,6 +49,43 @@ namespace mvc_2.Controllers
 
             return View(worksOnProject1);
         }
+
+        public IActionResult EditEmployeeHour()
+        {
+            List<employee> employees = db.employees.ToList();
+            ViewBag.employees = new SelectList(employees, "SSN", "FirstName");
+            return View();
+        }
+
+        public IActionResult EditEmployeeHour_emp(int id)
+        {
+            List<project>? projects = db.workOns.Include(wop => wop.Project).Where(wop => wop.ESSN == id).Select(wop => wop.Project).ToList();
+            ViewBag.projects = new SelectList(projects, "Number", "Name");
+            if (projects.Count > 0)
+            {
+                workOn worksOnProject = new workOn()
+                {
+                    Hours = db.workOns.SingleOrDefault(wop => (wop.ESSN == id) && (wop.projectNum == projects[0].Number)).Hours
+                };
+                return PartialView("_ProjectsList", worksOnProject);
+            }
+            return PartialView("_ProjectsList");
+        }
+
+        public IActionResult EditEmployeeHour_emp_proj(int id, int projNum)
+        {
+            workOn? worksOnProject = db.workOns.SingleOrDefault(wop => wop.ESSN == id && wop.projectNum == projNum);
+         
+            return PartialView("_hour", worksOnProject);
+        }
+
+        public IActionResult EditEmployeeHourDb(workOn worksOnProject)
+        {
+            db.workOns.Update(worksOnProject);
+            db.SaveChanges();
+            return View();
+        }
+
 
     }
 

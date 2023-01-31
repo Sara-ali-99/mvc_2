@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MVCD3.Controllers
+namespace mvc_2.Controllers
 {
     public class customValidationController : Controller
     {
