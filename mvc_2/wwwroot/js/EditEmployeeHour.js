@@ -9,7 +9,7 @@ var inputHour = document.getElementById("Hours");
 employee.addEventListener("change", async () => {
 
     
-    var projectsResult = await fetch("http://localhost:5174/worksOnProject/EditEmployeeHour_emp/" + employee.value);
+    var projectsResult = await fetch("http://localhost:5/worksOnProject/EditEmployeeHour_emp/" + employee.value);
     projectList = await projectsResult.text();
     console.log(projectList);
 
